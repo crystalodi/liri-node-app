@@ -9,3 +9,26 @@ var client = new Twitter(keys.twitter);
 
 console.log(spotify);
 console.log(client);
+if(process.argv[2]) {
+  var liriCommand = process.argv[2].toLowerCase();
+} 
+else {
+  return console.log("Please provide a command");
+}
+
+switch(liriCommand) {
+  case "my-tweets":
+
+  break
+  case "spotify-this-song":
+  
+  break
+  case "movie-this":
+  
+  break
+  case "do-what-it-says":
+
+  break
+  default:
+    console.log("invalid command");
+}
