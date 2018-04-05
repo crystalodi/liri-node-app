@@ -6,9 +6,6 @@ var spotify_module = require("node-spotify-api");
 var twitter_module = require("twitter");
 var spotify = new spotify_module(keys.spotify);
 var client = new twitter_module(keys.twitter);
-
-console.log(spotify);
-console.log(client);
 var liriCommand = process.argv[2]
 if(liriCommand) {
   liriCommand = liriCommand.toLowerCase();
@@ -19,17 +16,34 @@ else {
 
 switch(liriCommand) {
   case "my-tweets":
-    console.log("tweets");
+    getMyTweets();
   break
   case "spotify-this-song":
-    console.log("spotify");
+    spotifyThisSong();
   break
   case "movie-this":
-    console.log("movie");
+    movieThis();
   break
   case "do-what-it-says":
-    console.log("do");
+    doWhatItSays();
   break
   default:
     console.log("invalid command");
 }
+
+function getMyTweets() {
+  console.log("tweets");
+}
+
+function spotifyThisSong() {
+  console.log("spotify");
+}
+
+function movieThis() {
+  console.log("movie");
+}
+
+function doWhatItSays() {
+  console.log("do");
+}
+
