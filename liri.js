@@ -52,7 +52,30 @@ function spotifyThisSong() {
 }
 
 function movieThis() {
-  console.log("movie");
+  if(!liriAction) {
+    liriAction = "Mr. Nobody";
+  }
+  var searchTerm = liriAction.replace(/ /g, '+')
+  var url = "http://www.omdbapi.com/?t=" + searchTerm + "&y=&plot=short&apikey=" + keys.ombd;
+  console.log(url);
+  request(url, function(error, response, body){
+    if(response.statusCode === 200 && !error) {
+      var responseBody = JSON.parse(body);
+      console.log("Movie Title: " + responseBody.Title);
+      console.log("Release Year: " + responseBody.Year);
+      console.log("IMBD Rating: " + responseBody.imdbRating);
+      var ratingsArray = responseBody.Ratings;
+      for(var i = 0; i < ratingsArray.length; i++) {
+        if(ratingsArray[i]["Source"] === "Rotten Tomatoes") {
+          console.log("Rotten Tomatoes Rating: " + ratingsArray[i]["Value"]);
+          break;
+        }
+      }
+      console.log("Country Produced In: " + responseBody.Country);
+      console.log("Movie Plot: " + responseBody.Plot);
+      console.log("Actors: " + responseBody.Actors);
+    }
+  });
 }
 
 function doWhatItSays() {
