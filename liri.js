@@ -48,7 +48,16 @@ function getMyTweets() {
 }
 
 function spotifyThisSong() {
-  console.log("spotify");
+  var searchObj = {
+    type: 'track',
+    query: !liriAction ? "The Sign Ace of Base" : liriAction,
+    limit: 1
+  }
+  spotify.search(searchObj).then(function(response){
+    console.log(response.tracks);
+  }).catch(function(err){
+    console.log(err);
+  });
 }
 
 function movieThis() {
