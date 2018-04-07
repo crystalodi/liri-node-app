@@ -23,7 +23,6 @@ if(liriCommand) {
 else {
   return console.log("Please provide a command");
 }
-console.log(liriAction.length);
 switch(liriCommand) {
   case "my-tweets":
     getMyTweets();
@@ -53,13 +52,14 @@ function spotifyThisSong() {
   }
   spotify.search(searchObj).then(function(response){
     var songInfo = response.tracks.items;
+    console.log(JSON.stringify(songInfo, null, 2))
     for(var i = 0; i < songInfo.length; i++) {
       var artists = songInfo[i]["artists"];
       var artistString = "";
       for(var j = 0; j < artists.length; j++) {
         artistString = artistString + " " + artists[j]["name"];
       }
-      artistString = artistString.trim();
+      artistString = artistString.trim()
       console.log("Artist(s): " + artistString);
       console.log("Preview Song: " + songInfo[i]["preview_url"]);
       console.log("Album: " + songInfo[i]["name"])
