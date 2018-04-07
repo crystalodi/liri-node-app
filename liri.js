@@ -6,8 +6,6 @@ var spotify_module = require("node-spotify-api");
 var twitter_module = require("twitter");
 var spotify = new spotify_module(keys.spotify);
 var client = new twitter_module(keys.twitter);
-console.log(spotify);
-console.log(client)
 var nodeArguments = process.argv;
 var liriCommand = nodeArguments[2];
 var liriAction = "";
@@ -54,7 +52,18 @@ function spotifyThisSong() {
     limit: 1
   }
   spotify.search(searchObj).then(function(response){
-    console.log(response.tracks);
+    var songInfo = response.tracks.items;
+    for(var i = 0; i < songInfo.length; i++) {
+      var artists = songInfo[i]["artists"];
+      var artistString = "";
+      for(var j = 0; j < artists.length; j++) {
+        artistString = artistString + " " + artists[j]["name"];
+      }
+      artistString = artistString.trim();
+      console.log("Artist(s): " + artistString);
+      console.log("Preview Song: " + songInfo[i]["preview_url"]);
+      console.log("Album: " + songInfo[i]["name"])
+    }
   }).catch(function(err){
     console.log(err);
   });
@@ -66,7 +75,6 @@ function movieThis() {
   }
   var searchTerm = liriAction.replace(/ /g, '+')
   var url = "http://www.omdbapi.com/?t=" + searchTerm + "&y=&plot=short&apikey=" + keys.ombd;
-  console.log(url);
   request(url, function(error, response, body){
     if(response.statusCode === 200 && !error) {
       var responseBody = JSON.parse(body);
