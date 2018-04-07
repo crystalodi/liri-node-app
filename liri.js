@@ -41,11 +41,14 @@ switch(liriCommand) {
 }
 
 function getMyTweets() {
-  var userName = {screen_name: "crystal12351508"}
-  client.get("statuses/user_timeline", userName, function(error, tweets, response){
+  var requestObj = {screen_name: "crystal12351508", count:20}
+  client.get("statuses/user_timeline", requestObj, function(error, tweets, response){
     if(!error) {
       for(var i = 0; i < tweets.length; i++) {
         console.log("Created At: " + tweets[i]["created_at"] + "\nTweet: " + tweets[i]["text"]);
+        if(i < tweets.length - 1) {
+          console.log("-----------------------------------")
+        }
       }
     }
   });
