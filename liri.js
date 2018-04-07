@@ -41,12 +41,18 @@ switch(liriCommand) {
 }
 
 function getMyTweets() {
-  console.log("tweets");
+  var userName = {screen_name: "crystal12351508"}
+  client.get("statuses/user_timeline", userName, function(error, tweets, response){
+    if(error) {
+      return console.log(error)
+    }
+    console.log(JSON.stringify(tweets, null, 2));
+  });
 }
 
 function spotifyThisSong() {
   var searchObj = {
-    type: 'track',
+    type: "track",
     query: !liriAction ? "The Sign Ace of Base" : liriAction,
     limit: 1
   }
