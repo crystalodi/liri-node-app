@@ -7,22 +7,8 @@ var twitter_module = require("twitter");
 var spotify = new spotify_module(keys.spotify);
 var client = new twitter_module(keys.twitter);
 var nodeArguments = process.argv;
-var liriCommand = nodeArguments[2];
-var liriAction = "";
-//put actions in an array and join on " "
-var actionArray = [];
-if(nodeArguments[3]) {
-  for(var i = 3; i < nodeArguments.length; i++) {
-    liriAction = liriAction + " " + nodeArguments[i];
-  }
-  liriAction = liriAction.trim();
-}
-if(liriCommand) {
-  liriCommand = liriCommand.toLowerCase();
-} 
-else {
-  return console.log("Please provide a command");
-}
+var liriCommand = getLiriCommand();
+var liriAction = getLiriAction();
 switch(liriCommand) {
   case "my-tweets":
     getMyTweets();
@@ -32,9 +18,6 @@ switch(liriCommand) {
   break
   case "movie-this":
     movieThis();
-  break
-  case "do-what-it-says":
-    doWhatItSays();
   break
   default:
     console.log("invalid command");
@@ -62,7 +45,6 @@ function spotifyThisSong() {
   }
   spotify.search(searchObj).then(function(response){
     var songInfo = response.tracks.items;
-    console.log(JSON.stringify(songInfo, null, 2))
     for(var i = 0; i < songInfo.length; i++) {
       var artists = songInfo[i]["artists"];
       var artistString = "";
@@ -105,7 +87,30 @@ function movieThis() {
   });
 }
 
-function doWhatItSays() {
-  console.log("do");
+function getLiriAction() {
+  var action = ""
+  if(nodeArguments[3]) {
+    for(var i = 3; i < nodeArguments.length; i++) {
+      action = action + " " + nodeArguments[i];
+    }
+    action = action.trim();
+  }
+  return action;
 }
 
+function getLiriCommand() {
+  var command = nodeArguments[2] ? nodeArguments[2].toLowerCase().trim() : "";
+  if(command !== "do-what-it-says") {
+    return command;
+  }
+  var data = fs.readFileSync("random.txt", "utf8");
+  console.log(data)
+  var commandArray = data.split("|");
+  console.log(commandArray);
+  var randomIndex = Math.floor(Math.random() * commandArray.length);
+  var commandNode = commandArray[randomIndex].split(",");
+  var command = commandNode[0]
+  nodeArguments[2] = commandNode[0]
+  nodeArguments[3] = commandNode[1]
+  return command;
+}
