@@ -5,7 +5,7 @@ LIRI is like iPhone's SIRI. However, while SIRI is a Speech Interpretation and R
 ## Install
 * Install the LTS (Latest Stable Release) version of NodeJS from [here](https://nodejs.org/en/download/).
 
-* Clone [this](https://github.com/crystalodi/liri-node-app.git) repository to your computer
+* Clone [this](https://github.com/crystalodi/liri-node-app) repository to your computer
 
 * Navigate to the file directory where you cloned the repository and run the command `npm install` from a terminal window
 
