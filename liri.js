@@ -25,16 +25,19 @@ switch(liriCommand) {
 
 function getMyTweets() {
   var requestObj = {screen_name: "crystal12351508", count:20}
-  client.get("statuses/user_timeline", requestObj, function(error, tweets, response){
-    if(!error) {
-      for(var i = 0; i < tweets.length; i++) {
-        console.log("Created At: " + tweets[i]["created_at"] + "\nTweet: " + tweets[i]["text"]);
-        if(i < tweets.length - 1) {
-          console.log("-----------------------------------")
-        }
+  client.get("statuses/user_timeline", requestObj).then(function(tweets){
+    for(var i = 0; i < tweets.length; i++) {
+      console.log("Created At: " + tweets[i]["created_at"]);
+      console.log("Tweet: " + tweets[i]["text"]);
+      if(i < tweets.length - 1) {
+        console.log("-----------------------------------");
       }
     }
-  });
+  }).catch(function(error){
+    if(error) {
+      console.log(error);
+    }
+  })
 }
 
 function spotifyThisSong() {
@@ -84,6 +87,9 @@ function movieThis() {
       console.log("Movie Plot: " + responseBody.Plot);
       console.log("Actors: " + responseBody.Actors);
     }
+    if(error) {
+      console.log(error);
+    }
   });
 }
 
@@ -103,14 +109,21 @@ function getLiriCommand() {
   if(command !== "do-what-it-says") {
     return command;
   }
-  var data = fs.readFileSync("random.txt", "utf8");
-  console.log(data)
-  var commandArray = data.split("|");
-  console.log(commandArray);
-  var randomIndex = Math.floor(Math.random() * commandArray.length);
-  var commandNode = commandArray[randomIndex].split(",");
-  var command = commandNode[0]
-  nodeArguments[2] = commandNode[0]
-  nodeArguments[3] = commandNode[1]
-  return command;
+  var data;
+  try {
+    data = fs.readFileSync("random.txt", "utf8");
+    console.log(data)
+    var commandArray = data.split("|");
+    console.log(commandArray);
+    var randomIndex = Math.floor(Math.random() * commandArray.length);
+    var commandNode = commandArray[randomIndex].split(",");
+    var command = commandNode[0]
+    nodeArguments[2] = commandNode[0]
+    nodeArguments[3] = commandNode[1]
+    return command;
+  } catch (error) {
+    if(error.code) {
+      console.log("Error reading file");
+    }
+  }
 }
