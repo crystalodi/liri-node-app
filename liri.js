@@ -26,12 +26,16 @@ switch(liriCommand) {
 function getMyTweets() {
   var requestObj = {screen_name: "crystal12351508", count:20}
   client.get("statuses/user_timeline", requestObj).then(function(tweets){
-    for(var i = 0; i < tweets.length; i++) {
-      console.log("Created At: " + tweets[i]["created_at"]);
-      console.log("Tweet: " + tweets[i]["text"]);
-      if(i < tweets.length - 1) {
-        console.log("-----------------------------------");
+    if(tweets) {
+      for(var i = 0; i < tweets.length; i++) {
+        console.log("Created At: " + tweets[i]["created_at"]);
+        console.log("Tweet: " + tweets[i]["text"]);
+        if(i < tweets.length - 1) {
+          console.log("-----------------------------------");
+        }
       }
+    } else {
+      console.log("No tweets found!")
     }
   }).catch(function(error){
     if(error) {
@@ -48,16 +52,28 @@ function spotifyThisSong() {
   }
   spotify.search(searchObj).then(function(response){
     var songInfo = response.tracks.items;
-    for(var i = 0; i < songInfo.length; i++) {
-      var artists = songInfo[i]["artists"];
-      var artistString = "";
-      for(var j = 0; j < artists.length; j++) {
-        artistString = artistString + " " + artists[j]["name"];
+    if(songInfo.length > 0) {
+      for(var i = 0; i < songInfo.length; i++) {
+        var artistString = "";
+        var previewURL = songInfo[i]["preview_url"] ? songInfo[i]["preview_url"] : "N/A";
+        var album = songInfo[i]["name"] ? songInfo[i]["name"] : "N/A";
+        if(songInfo[i]["artists"]) {
+          var artists = songInfo[i]["artists"];
+          for(var j = 0; j < artists.length; j++) {
+            artistString = artistString + " " + artists[j]["name"];
+          }
+          artistString = artistString.trim();
+        }
+        else {
+          artistString = "N/A";
+        }
+        console.log("Artist(s): " + artistString);
+        console.log("Preview Song: " + previewURL);
+        console.log("Album: " + album);
       }
-      artistString = artistString.trim()
-      console.log("Artist(s): " + artistString);
-      console.log("Preview Song: " + songInfo[i]["preview_url"]);
-      console.log("Album: " + songInfo[i]["name"])
+    }
+    else {
+      console.log("No song information found")
     }
   }).catch(function(err){
     console.log(err);
@@ -71,24 +87,35 @@ function movieThis() {
   var searchTerm = liriAction.replace(/ /g, '+')
   var url = "http://www.omdbapi.com/?t=" + searchTerm + "&y=&plot=short&apikey=" + keys.ombd;
   request(url, function(error, response, body){
+    var responseBody = JSON.parse(body);
+    if(error) {
+      return console.log(error);
+    }
+    if(responseBody.Error) {
+      return console.log(responseBody.Error)
+    }
     if(response.statusCode === 200 && !error) {
-      var responseBody = JSON.parse(body);
-      console.log("Movie Title: " + responseBody.Title);
-      console.log("Release Year: " + responseBody.Year);
-      console.log("IMBD Rating: " + responseBody.imdbRating);
-      var ratingsArray = responseBody.Ratings;
-      for(var i = 0; i < ratingsArray.length; i++) {
-        if(ratingsArray[i]["Source"] === "Rotten Tomatoes") {
-          console.log("Rotten Tomatoes Rating: " + ratingsArray[i]["Value"]);
-          break;
+      var title = responseBody.Title ? responseBody.Title : "N/A";
+      var releaseYear = responseBody.Year ? responseBody.Year : "N/A";
+      var imdbRating = responseBody.imdbRating ? responseBody.imdbRating : "N/A";
+      var country = responseBody.Country ? responseBody.Country : "N/A";
+      var plot = responseBody.Plot ? responseBody.Plot : "N/A";
+      var actors = responseBody.Actors ? responseBody.Actors : "N/A";
+      console.log("Movie Title: " + title);
+      console.log("Release Year: " + releaseYear);
+      console.log("IMBD Rating: " + imdbRating);
+      if(responseBody.Ratings) {
+        var ratingsArray = responseBody.Ratings;
+        for(var i = 0; i < ratingsArray.length; i++) {
+          if(ratingsArray[i]["Source"] === "Rotten Tomatoes") {
+            console.log("Rotten Tomatoes Rating: " + ratingsArray[i]["Value"]);
+            break;
+          }
         }
       }
-      console.log("Country Produced In: " + responseBody.Country);
-      console.log("Movie Plot: " + responseBody.Plot);
-      console.log("Actors: " + responseBody.Actors);
-    }
-    if(error) {
-      console.log(error);
+      console.log("Country Produced In: " + country);
+      console.log("Movie Plot: " + plot);
+      console.log("Actors: " + actors);
     }
   });
 }
@@ -127,3 +154,4 @@ function getLiriCommand() {
     }
   }
 }
+
