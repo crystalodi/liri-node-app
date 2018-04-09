@@ -22,6 +22,7 @@ switch(liriCommand) {
   default:
     console.log("invalid command");
 }
+logCommand();
 
 function getMyTweets() {
   var requestObj = {screen_name: "crystal12351508", count:20}
@@ -45,9 +46,12 @@ function getMyTweets() {
 }
 
 function spotifyThisSong() {
+  if(!liriAction) {
+    liriAction = "The Sign Ace of Base";
+  }
   var searchObj = {
     type: "track",
-    query: !liriAction ? "The Sign Ace of Base" : liriAction,
+    query: liriAction,
     limit: 1
   }
   spotify.search(searchObj).then(function(response){
@@ -139,9 +143,7 @@ function getLiriCommand() {
   var data;
   try {
     data = fs.readFileSync("random.txt", "utf8");
-    console.log(data)
-    var commandArray = data.split("|");
-    console.log(commandArray);
+    var commandArray = data.split('\r\n');
     var randomIndex = Math.floor(Math.random() * commandArray.length);
     var commandNode = commandArray[randomIndex].split(",");
     var command = commandNode[0];
@@ -155,3 +157,11 @@ function getLiriCommand() {
   }
 }
 
+function logCommand() {
+  var strToLog = liriCommand + " " + liriAction + '\r\n';
+  fs.appendFile("log.txt", strToLog, function(err){
+    if(err) {
+      console.log(err);
+    }
+  });
+}
