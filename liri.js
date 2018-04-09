@@ -117,9 +117,9 @@ function getLiriCommand() {
     console.log(commandArray);
     var randomIndex = Math.floor(Math.random() * commandArray.length);
     var commandNode = commandArray[randomIndex].split(",");
-    var command = commandNode[0]
-    nodeArguments[2] = commandNode[0]
-    nodeArguments[3] = commandNode[1]
+    var command = commandNode[0];
+    nodeArguments[2] = commandNode[0];
+    nodeArguments[3] = !commandNode[1] ? "" : commandNode[1];
     return command;
   } catch (error) {
     if(error.code) {
